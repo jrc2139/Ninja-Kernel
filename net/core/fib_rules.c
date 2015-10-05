@@ -651,9 +651,16 @@ static int dump_rules(struct sk_buff *skb, struct netlink_callback *cb,
 		if (idx < cb->args[1])
 			goto skip;
 
+<<<<<<< HEAD
 		if (fib_nl_fill_rule(skb, rule, NETLINK_CB(cb->skb).portid,
 				     cb->nlh->nlmsg_seq, RTM_NEWRULE,
 				     NLM_F_MULTI, ops) < 0)
+=======
+		err = fib_nl_fill_rule(skb, rule, NETLINK_CB(cb->skb).portid,
+				       cb->nlh->nlmsg_seq, RTM_NEWRULE,
+				       NLM_F_MULTI, ops);
+		if (err < 0)
+>>>>>>> cfd629a... fib_rules: Fix dump_rules() not to exit early
 			break;
 skip:
 		idx++;
