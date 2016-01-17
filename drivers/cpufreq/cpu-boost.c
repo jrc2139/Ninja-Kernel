@@ -76,7 +76,7 @@ module_param(sched_boost_on_input, bool, 0644);
 static bool sched_boost_active;
 
 #ifdef CONFIG_STATE_NOTIFIER
-bool wakeup_cb_boost;
+bool wakeup_cb_boost = 1;
 module_param_named(wakeup_boost, wakeup_cb_boost, bool, 0644);
 #endif
 
