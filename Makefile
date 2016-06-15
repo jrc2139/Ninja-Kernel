@@ -386,14 +386,20 @@ LINUXINCLUDE    := \
 KBUILD_CPPFLAGS := -D__KERNEL__
 
 KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
-		   -Wno-unused-const-variable -Wno-misleading-indentation \
-		   -Wno-duplicate-decl-specifier -Wno-memset-elt-size \
-		   -Wno-tautological-compare -Wno-bool-compare -Wno-array-bounds \
-		   -fno-strict-aliasing -fno-common \
-		   -Werror-implicit-function-declaration \
-		   -Wno-format-security \
-		   -fno-delete-null-pointer-checks\
-		   $(GEN_OPT_FLAGS)
+                   -fno-strict-aliasing -fno-common \
+                   -Werror-implicit-function-declaration \
+                   -Wno-format-security \
+                   -fno-delete-null-pointer-checks \
+                   -std=gnu89 \
+                   $(GEN_OPT_FLAGS)
+
+# F*** you, GCC 6.1+
+KBUILD_CFLAGS   += -Wno-misleading-indentation -Wno-tautological-compare -Wno-trigraphs -Wno-unused-label \
+                   -Wno-unused-const-variable -Wno-misleading-indentation -Wno-unused-function \
+                   -Wno-duplicate-decl-specifier -Wno-memset-elt-size \
+                   -Wno-tautological-compare -Wno-bool-compare -Wno-array-bounds \
+                   -Wno-incompatible-pointer-types -Wno-unused-variable
+
 KBUILD_AFLAGS_KERNEL := $(GEN_OPT_FLAGS)
 KBUILD_CFLAGS_KERNEL := $(GEN_OPT_FLAGS)
 KBUILD_AFLAGS   := -D__ASSEMBLY__
