@@ -398,7 +398,7 @@ KBUILD_CFLAGS   += -Wno-misleading-indentation -Wno-tautological-compare -Wno-tr
                    -Wno-unused-const-variable -Wno-misleading-indentation -Wno-unused-function \
                    -Wno-duplicate-decl-specifier -Wno-memset-elt-size \
                    -Wno-tautological-compare -Wno-bool-compare -Wno-array-bounds \
-                   -Wno-incompatible-pointer-types -Wno-unused-variable
+                   -Wno-incompatible-pointer-types -Wno-unused-variable -Wno-parentheses
 
 KBUILD_AFLAGS_KERNEL := $(GEN_OPT_FLAGS)
 KBUILD_CFLAGS_KERNEL := $(GEN_OPT_FLAGS)
