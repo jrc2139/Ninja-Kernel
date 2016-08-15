@@ -396,7 +396,7 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 # F*** you, GCC 6.1+
 KBUILD_CFLAGS   += -Wno-misleading-indentation -Wno-tautological-compare -Wno-trigraphs -Wno-unused-label \
                    -Wno-unused-const-variable -Wno-misleading-indentation -Wno-unused-function \
-                   -Wno-duplicate-decl-specifier -Wno-memset-elt-size \
+                   -Wno-duplicate-decl-specifier -Wno-memset-elt-size -Wno-discarded-qualifiers \
                    -Wno-tautological-compare -Wno-bool-compare -Wno-array-bounds \
                    -Wno-incompatible-pointer-types -Wno-unused-variable -Wno-parentheses
 
