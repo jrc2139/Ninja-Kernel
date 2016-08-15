@@ -397,7 +397,7 @@ KBUILD_CFLAGS   := -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs \
 KBUILD_CFLAGS   += -Wno-misleading-indentation -Wno-tautological-compare -Wno-trigraphs -Wno-unused-label \
                    -Wno-unused-const-variable -Wno-misleading-indentation -Wno-unused-function \
                    -Wno-duplicate-decl-specifier -Wno-memset-elt-size -Wno-discarded-qualifiers \
-                   -Wno-tautological-compare -Wno-bool-compare -Wno-array-bounds \
+                   -Wno-tautological-compare -Wno-bool-compare -Wno-array-bounds -Wno-int-conversion \
                    -Wno-incompatible-pointer-types -Wno-unused-variable -Wno-parentheses
 
 KBUILD_AFLAGS_KERNEL := $(GEN_OPT_FLAGS)
