@@ -1215,8 +1215,7 @@ int dhd_bus_rxctl(struct dhd_bus *bus, uchar *msg, uint msglen)
 	if (bus->dhd->rxcnt_timeout >= MAX_CNTL_TX_TIMEOUT) {
 #ifdef MSM_PCIE_LINKDOWN_RECOVERY
 		bus->islinkdown = TRUE;
-		bus->dhd->busstate = DHD_BUS_DOWN;
-		DHD_ERROR(("%s: PCIe link down\n",__FUNCTION__));
+		DHD_ERROR(("PCIe link down\n"));
 #endif /* SUPPORT_LINKDOWN_RECOVERY */
 		return -ETIMEDOUT;
 	}
@@ -2425,8 +2424,6 @@ dhd_bus_devreset(dhd_pub_t *dhdp, uint8 flag)
 	dhd_bus_t *bus = dhdp->bus;
 	unsigned long flags;
 	int ret = 0;
-	uint32 val;
-
 #ifdef CONFIG_ARCH_MSM
 	int retry = POWERUP_MAX_RETRY;
 #endif /* CONFIG_ARCH_MSM */
@@ -2515,10 +2512,6 @@ dhd_bus_devreset(dhd_pub_t *dhdp, uint8 flag)
 					else
 						OSL_SLEEP(10);
 				}
-
-				/* WAR: increase PCIe CMPL_TIMEOUT value */
-				val = dhdpcie_bus_cfg_read_dword(bus, PCIEGEN2_CAP_DEVSTSCTRL2_OFFSET, sizeof(uint32));
-				dhdpcie_bus_cfg_write_dword(bus, PCIEGEN2_CAP_DEVSTSCTRL2_OFFSET, sizeof(uint32), val|0x6);
 
 				if (ret && !retry) {
 					DHD_ERROR(("%s: host pcie clock enable failed: %d\n",
@@ -3670,11 +3663,8 @@ dhdpcie_handle_mb_data(dhd_bus_t *bus)
 	dhd_bus_cmn_writeshared(bus, &zero, sizeof(uint32), DTOH_MB_DATA, 0);
 	if (d2h_mb_data == PCIE_LINK_DOWN) {
 		DHD_ERROR(("%s pcie linkdown, 0x%08x\n", __FUNCTION__, d2h_mb_data));
-#ifdef MSM_PCIE_LINKDOWN_RECOVERY
-		bus->islinkdown = TRUE;
-		bus->dhd->busstate = DHD_BUS_DOWN;
-		dhd_os_check_hang(bus->dhd, 0, -ETIMEDOUT);
-#endif /* MSM_PCIE_LINKDOWN_RECOVERY */
+		bus->wait_for_d3_ack = DHD_INVALID;
+		dhd_os_d3ack_wake(bus->dhd);
 	}
 	DHD_INFO(("D2H_MB_DATA: 0x%04x\n", d2h_mb_data));
 	if (d2h_mb_data & D2H_DEV_DS_ENTER_REQ)  {
@@ -3850,6 +3840,7 @@ dhdpcie_readshared(dhd_bus_t *bus)
 		bus->dhd->dma_d2h_ring_upd_support = FALSE;
 		bus->dhd->dma_h2d_ring_upd_support = FALSE;
 	}
+
 
 	/* get ring_info, ring_state and mb data ptrs and store the addresses in bus structure */
 	{
@@ -4033,34 +4024,13 @@ int dhd_bus_init(dhd_pub_t *dhdp, bool enforce_mutex)
 		return ret;
 	}
 
+
 	/* Make sure we're talking to the core. */
 	bus->reg = si_setcore(bus->sih, PCIE2_CORE_ID, 0);
 	ASSERT(bus->reg != NULL);
 
 	/* Set bus state according to enable result */
 	dhdp->busstate = DHD_BUS_DATA;
-
-#ifdef DBG_PKT_MON
-	/*
-	 * XXX: WAR: Update dongle that driver supports sending of d11
-	 * tx_status through unused status field of PCIe completion header
-	 * if dongle also supports the same WAR.
-	 */
-	if (bus->pcie_sh->flags & PCIE_SHARED_D2H_D11_TX_STATUS) {
-		uint32 flags = bus->pcie_sh->flags;
-
-		flags |= PCIE_SHARED_H2D_D11_TX_STATUS;
-		ret = dhdpcie_bus_membytes(bus, TRUE, bus->shared_addr,
-				(uint8 *)&flags, sizeof(flags));
-		if (ret < 0) {
-			DHD_ERROR(("%s: update flag bit (H2D_D11_TX_STATUS) failed\n",
-				__FUNCTION__));
-			return ret;
-		}
-		bus->pcie_sh->flags = flags;
-		bus->dhd->d11_tx_status = TRUE;
-	}
-#endif /* DBG_PKT_MON */
 
 	/* Enable the interrupt after device is up */
 	dhdpcie_bus_intr_enable(bus);
