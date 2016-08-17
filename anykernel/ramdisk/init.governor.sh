@@ -1,4 +1,9 @@
 #!/system/bin/sh
+
+
+#########################
+##  GOVERNOR SETTINGS  ##
+#########################
 # BlackPepper v2 by xperator
 # Idea taken from frap123
 

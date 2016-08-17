@@ -8,7 +8,14 @@ service special_power /system/bin/sh /init.special_power.sh
     group root
     oneshot
 
-service ninja /system/bin/sh /init.ninja.sh
+service governor /system/bin/sh /init.governor.sh
+    disabled
+    class late_start
+    user root
+    group root
+    oneshot
+
+service gestures /system/bin/sh /init.gestures.sh
     disabled
     class late_start
     user root
@@ -36,32 +43,7 @@ on property:sys.boot_completed=1
    setprop dalvik.vm.heapminfree 2m
 
    # Apply governor settings
-   start ninja
-
-   # Enable wake gestures
-   chmod 666 /sys/android_touch/wake_gestures
-   write /sys/android_touch/wake_gestures 1
-   chmod 644 /sys/android_touch/wake_gestures
-   # Disable double tap to wake
-   chmod 666 /sys/android_touch/doubletap2wake
-   write /sys/android_touch/doubletap2wake 0
-   chmod 644 /sys/android_touch/doubletap2wake
-   # Disable sweep to sleep
-   chmod 666 /sys/android_touch/sweep2sleep
-   write /sys/android_touch/sweep2sleep 0
-   chmod 644 /sys/android_touch/sweep2sleep
-   # Enable sweep to wake in up and down
-   chmod 666 /sys/android_touch/sweep2wake
-   write /sys/android_touch/sweep2wake 12
-   chmod 644 /sys/android_touch/sweep2wake
-   # Enable camera gesture
-   chmod 666 /sys/android_touch/camera_gesture
-   write /sys/android_touch/camera_gesture 1
-   chmod 644 /sys/android_touch/camera_gesture
-   # Set vibration strength at default 20 (34% in EXKM)
-   chmod 666 /sys/android_touch/vib_strength
-   write /sys/android_touch/vib_strength 20
-   chmod 644 /sys/android_touch/vib_strength
+   start governor
 
    # Backlight dimmer
    write /sys/module/mdss_fb/parameters/backlight_dimmer 1
@@ -91,3 +73,6 @@ on property:sys.boot_completed=1
    write /sys/devices/system/cpu/cpu5/online 1
    write /sys/devices/system/cpu/cpu6/online 1
    write /sys/devices/system/cpu/cpu7/online 1
+
+   # Wake gestures
+   start gestures
