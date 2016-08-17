@@ -1,0 +1,66 @@
+# Ninja initialization script
+# Pieces taken from @anarkia1976, @franciscofranco, @frap123, and @flar2
+
+service special_power /system/bin/sh /init.special_power.sh
+    disabled
+    class late_start
+    user root
+    group root
+    oneshot
+
+service ninja /system/bin/sh /init.ninja.sh
+    disabled
+    class late_start
+    user root
+    group root
+    oneshot
+
+on boot
+   # initialize frequency limits
+   chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq_hardlimit
+   chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq_hardlimit
+   write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq_hardlimit 302400
+   chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq_hardlimit
+   chmod 0664 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq_hardlimit
+   write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq_hardlimit 1708800
+   chown system system /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq_hardlimit
+   chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq_hardlimit
+   write /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq_hardlimit 302400
+   chown system system /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq_hardlimit
+   chmod 0664 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq_hardlimit
+   write /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq_hardlimit 2054400
+
+on property:sys.boot_completed=1
+   # according to Qcom this legacy value improves first launch latencies
+   # stock value is 512k
+   setprop dalvik.vm.heapminfree 2m
+
+   # Apply governor settings
+   start ninja
+
+   # Wake gestures
+   write /sys/android_touch/doubletap2wake 0
+   write /sys/android_touch/sweep2sleep 0
+   write /sys/android_touch/sweep2wake 12
+   write /sys/android_touch/camera_gesture 1
+   write /sys/android_touch/vib_strength 20
+   write /sys/android_touch/wake_gestures 1
+
+   # Backlight dimmer
+   write /sys/module/mdss_fb/parameters/backlight_dimmer 1
+
+   # re-enable retention idle state
+   # fix-up is merged in the Kernel
+   write /sys/module/lpm_levels/system/a53/cpu0/retention/idle_enabled 1
+   write /sys/module/lpm_levels/system/a53/cpu1/retention/idle_enabled 1
+   write /sys/module/lpm_levels/system/a53/cpu2/retention/idle_enabled 1
+   write /sys/module/lpm_levels/system/a53/cpu3/retention/idle_enabled 1
+   write /sys/module/lpm_levels/system/a57/cpu4/retention/idle_enabled 1
+   write /sys/module/lpm_levels/system/a57/cpu5/retention/idle_enabled 1
+   write /sys/module/lpm_levels/system/a53/a53-l2-retention/idle_enabled 1
+   write /sys/module/lpm_levels/system/a57/a57-l2-retention/idle_enabled 1
+
+   # special power tweaks
+   # we're using this shell file to make use of helper functions to go through several nodes at once
+   # these tweaks are reference values from qualcomm for newer devfreq options and HMP parameters
+   start special_power
