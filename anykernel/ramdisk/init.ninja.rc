@@ -38,13 +38,30 @@ on property:sys.boot_completed=1
    # Apply governor settings
    start ninja
 
-   # Wake gestures
-   write /sys/android_touch/doubletap2wake 0
-   write /sys/android_touch/sweep2sleep 0
-   write /sys/android_touch/sweep2wake 12
-   write /sys/android_touch/camera_gesture 1
-   write /sys/android_touch/vib_strength 20
+   # Enable wake gestures
+   chmod 666 /sys/android_touch/wake_gestures
    write /sys/android_touch/wake_gestures 1
+   chmod 644 /sys/android_touch/wake_gestures
+   # Disable double tap to wake
+   chmod 666 /sys/android_touch/doubletap2wake
+   write /sys/android_touch/doubletap2wake 0
+   chmod 644 /sys/android_touch/doubletap2wake
+   # Disable sweep to sleep
+   chmod 666 /sys/android_touch/sweep2sleep
+   write /sys/android_touch/sweep2sleep 0
+   chmod 644 /sys/android_touch/sweep2sleep
+   # Enable sweep to wake in up and down
+   chmod 666 /sys/android_touch/sweep2wake
+   write /sys/android_touch/sweep2wake 12
+   chmod 644 /sys/android_touch/sweep2wake
+   # Enable camera gesture
+   chmod 666 /sys/android_touch/camera_gesture
+   write /sys/android_touch/camera_gesture 1
+   chmod 644 /sys/android_touch/camera_gesture
+   # Set vibration strength at default 20 (34% in EXKM)
+   chmod 666 /sys/android_touch/vib_strength
+   write /sys/android_touch/vib_strength 20
+   chmod 644 /sys/android_touch/vib_strength
 
    # Backlight dimmer
    write /sys/module/mdss_fb/parameters/backlight_dimmer 1
@@ -64,3 +81,13 @@ on property:sys.boot_completed=1
    # we're using this shell file to make use of helper functions to go through several nodes at once
    # these tweaks are reference values from qualcomm for newer devfreq options and HMP parameters
    start special_power
+
+   # Plug in all cores
+   write /sys/devices/system/cpu/cpu0/online 1
+   write /sys/devices/system/cpu/cpu1/online 1
+   write /sys/devices/system/cpu/cpu2/online 1
+   write /sys/devices/system/cpu/cpu3/online 1
+   write /sys/devices/system/cpu/cpu4/online 1
+   write /sys/devices/system/cpu/cpu5/online 1
+   write /sys/devices/system/cpu/cpu6/online 1
+   write /sys/devices/system/cpu/cpu7/online 1
