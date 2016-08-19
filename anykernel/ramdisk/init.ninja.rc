@@ -1,5 +1,5 @@
 # Ninja initialization script
-# Pieces taken from @anarkia1976, @franciscofranco, @frap123, and @flar2
+# Pieces taken from @anarkia1976, @franciscofranco, @frap129, and @flar2
 
 service special_power /system/bin/sh /init.special_power.sh
     disabled
@@ -92,6 +92,10 @@ on property:sys.boot_completed=1
    # we're using this shell file to make use of helper functions to go through several nodes at once
    # these tweaks are reference values from qualcomm for newer devfreq options and HMP parameters
    start special_power
+
+   # Wakelock dividers
+   write /sys/module/bcmdhd/parameters/wlrx_divide 8
+   write /sys/module/bcmdhd/parameters/wlctrl_divide 8
 
    # Plug in all cores
    write /sys/devices/system/cpu/cpu0/online 1

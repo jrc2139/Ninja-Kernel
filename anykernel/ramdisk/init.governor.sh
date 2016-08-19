@@ -5,7 +5,7 @@
 ##  GOVERNOR SETTINGS  ##
 #########################
 # BlackPepper v2 by xperator
-# Idea taken from frap123
+# Idea taken from frap129
 
 
 ########################
@@ -28,13 +28,13 @@ echo 1 > /sys/devices/system/cpu/cpu7/online
 ##  LITTLE CLUSTER  ##
 ######################
 # Governor: interactive
-# Minimum frequency: 302MHz
+# Minimum frequency: 384MHz
 # Maxixum frequency: 1708MHz
 chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 chmod 644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 echo interactive > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-echo 302400 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
+echo 384000 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 echo 1708800 > /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 chmod 444 /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
@@ -57,13 +57,13 @@ echo 80000 > /sys/devices/system/cpu/cpu0/cpufreq/interactive/max_freq_hysteresi
 ##  BIG CLUSTER  ##
 ###################
 # Governor: interactive
-# Minimum frequency: 302MHz
+# Minimum frequency: 633MHz
 # Maxixum frequency: 2054MHz
 chmod 644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
 chmod 644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 chmod 644 /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
 echo interactive > /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
-echo 302400 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
+echo 633600 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq
 echo 2054400 > /sys/devices/system/cpu/cpu4/cpufreq/scaling_max_freq
 chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/scaling_governor
 chmod 444 /sys/devices/system/cpu/cpu4/cpufreq/scaling_min_freq

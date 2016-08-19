@@ -20,14 +20,6 @@ function get-set-forall() {
 
 ################################################################################
 
-# Setting B.L scheduler parameters
-write /proc/sys/kernel/sched_migration_fixup 1
-write /proc/sys/kernel/sched_small_task 30
-write /proc/sys/kernel/sched_upmigrate 99
-write /proc/sys/kernel/sched_downmigrate 85
-write /proc/sys/kernel/sched_freq_inc_notify 400000
-write /proc/sys/kernel/sched_freq_dec_notify 400000
-
 # devfreq
 get-set-forall /sys/class/devfreq/qcom,cpubw*/governor bw_hwmon
 restorecon -R /sys/class/devfreq/qcom,cpubw*
