@@ -99,14 +99,6 @@ fi
 cp -f /tmp/anykernel/tools/thermal-engine.conf /system/etc;
 mount -o remount,ro /system;
 
-if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.modules)" == 1 ]; then
-  ui_print "Pushing modules...";
-  mount -o remount,rw /system;
-  cp -rf /tmp/anykernel/modules/* /system/lib/modules/;
-  set_perm_recursive 0 0 0755 0644 /system/lib/modules;
-  mount -o remount,ro /system;
-fi;
-
 if [ "$(file_getprop /tmp/anykernel/anykernel.sh do.cleanup)" == 1 ]; then
   rm -rf /tmp/anykernel;
 fi;
